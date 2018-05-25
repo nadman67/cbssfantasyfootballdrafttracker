@@ -39,8 +39,8 @@ namespace DraftTracker
         Dictionary<string, string> _logoDictionary = new Dictionary<string, string>();
         //use fiddler to capture traffic after login, tokens expire 
         //public static string token = "U2FsdGVkX19syk3KN8GEzlkjZxmD-2K6p2VdIh_0AkaIkKUBADyaJUJe4vUYu1J6S5MpR1bod3DONWUM83eEwnn1wfa_VQ2mbOosjSLCPhdx_BK_yq8qdeMSveroouHRYt-hDpA3UJuSMfAz8C8azA";
-        public static string token =  ConfigurationManager.AppSettings["token"];// "U2FsdGVkX19tgLKaZ_uBd-80D32AU8s30FgwrYyTaerC2fOqYFm7QbGFKKYWEjwjaJKp0C0P4wvIuwnnyC1IjMA_Z3b5w5Ej2Fenk_Nwm2RUWzdKurZMUdpmv5TNyjoo1crDBw8Z8GUPXRMazH5LJA";
-        public static string leagueName = ConfigurationManager.AppSettings["leaguename"];// "18927-h2h"; //debug
+        public static string token =  ConfigurationManager.AppSettings["token"];
+        public static string leagueName = ConfigurationManager.AppSettings["leaguename"];
         //lists to iterate over for rankBrowser html display
         List<string> _rankingList = new List<string>(7) { "", "", "", "", "", "", "" };
         int rankIncrementer = 0;//increments for display rollover
@@ -190,16 +190,16 @@ namespace DraftTracker
                     "<div class='logo'><img src = '" + _logoDictionary[team] + "' width='36' height='36' border='0' /></div><div class='editLogoCover'>&nbsp;</div></div>" +
                     "<div class='teaminfo'><div class='teamName'>" + team + "</div><div class='teamOwnersAndSettings'></div></div></div></div></div>";
             html += "<table class='data' style='width:100%;'>" + this.GetStyle() + 
-                "<thead><tr class='subtitle'><td colspan = '13' > Players </td></tr>";
-            html += "<tr class='label'><td>QB</td></tr>";
+                "<thead><tr class='subtitle'><td colspan = '3' > Players </td></tr>";
+            html += "<tr class='label'><td colspan='3'>QB</td></tr>";
             html += GetPlayerHtml(teamPicks, "QB");
-            html += "<tr class='label'><td>RB</td></tr>";
+            html += "<tr class='label'><td colspan='3'>RB</td></tr>";
             html += GetPlayerHtml(teamPicks, "RB");
-            html += "<tr class='label'><td>WR-TE</td></tr>";
+            html += "<tr class='label'><td colspan='3'>WR-TE</td></tr>";
             html += GetPlayerHtml(teamPicks, "WR-TE");
-            html += "<tr class='label'><td>K</td></tr>";
+            html += "<tr class='label'><td colspan='3'>K</td></tr>";
             html += GetPlayerHtml(teamPicks, "K");
-            html += "<tr class='label'><td>DST</td></tr>";
+            html += "<tr class='label'><td colspan='3'>DST</td></tr>";
             html += GetPlayerHtml(teamPicks, "DST");
             html += "</thead></table>";
             html += "</html>";
@@ -213,7 +213,7 @@ namespace DraftTracker
             foreach (var pick in teamPicks.Where(x => x.player.roster_position == pos))
             {
                 html += "<tr>";
-                html += "<td align='left' class='playerPosition'></td><td align='left' class='playerLink'>" + pick.player.fullname + " <span class='playerPositionAndTeam'>" + pick.player.roster_position + " | " + pick.player.pro_team + " </span></td><td style='width: 118px;'>" + pick.player.bye_week + "</td>";
+                html += "<td align='left' class='playerLink' style='width: 1000px;'>" + pick.player.fullname + " <span class='playerPositionAndTeam'>" + pick.player.roster_position + " | " + pick.player.pro_team + " </span></td><td style='width: 118px;'>" + pick.player.bye_week + "</td>";
 
                 html += "</tr>";
             }

@@ -16,6 +16,9 @@
         <WebBrowser HorizontalAlignment="Left" Height="718" Margin="459,10,0,0" VerticalAlignment="Top" Width="350" Name="rankBrowser" Grid.ColumnSpan="2" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
         <WebBrowser Grid.Column="1" HorizontalAlignment="Left" Height="381" Margin="257,10,0,0" VerticalAlignment="Top" Width="517" Name="resultBrowser" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
         <WebBrowser Grid.Column="1" HorizontalAlignment="Left" Height="326" Margin="257,402,0,0" VerticalAlignment="Top" Width="517" Name="lastTenBrowser" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
-        
+        <Border HorizontalAlignment="Left" Height="718" Margin="449,10,0,0" VerticalAlignment="Top" Width="1" Background="#8888"/>
+        <Border HorizontalAlignment="Left" Height="718" Margin="247,10,0,0" VerticalAlignment="Top" Width="1" Background="#8888" Grid.Column="1"/>
+        <Border HorizontalAlignment="Left" Height="5" Margin="257,397,0,0" VerticalAlignment="Top" Width="1" Background="#8888" Grid.Column="1"/>
+
     </Grid>
 </Window>

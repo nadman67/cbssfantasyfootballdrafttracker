@@ -31,6 +31,8 @@ namespace DraftTracker
     {
         public PPRRankings rankings { get; set; }
     }
+    //used to deserialize json returned from 
+    //http://api.cbssports.com/fantasy/players/rankings?version=3.0&SPORT=football&response_format=json
     [JsonObject(Title = "RootObject")]
     public class PositionPlayerRank
     {

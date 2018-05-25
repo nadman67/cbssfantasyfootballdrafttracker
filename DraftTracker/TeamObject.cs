@@ -31,6 +31,8 @@ namespace DraftTracker
     {
         public List<Team> teams { get; set; }
     }
+    //used to deserialize json returned from 
+    //http://[leaguename].football.cbssports.com/api/league/teams?version=3.0&response_format=json&access_token=[token]&content_type=all
     [JsonObject(Title = "RootObject")]
     public class TeamObject
     {

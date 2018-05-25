@@ -63,6 +63,8 @@ namespace DraftTracker
         public DraftResults draft_results { get; set; }
     }
 
+    //used to deserialize json returned from 
+    //http://[leaguename].football.cbssports.com/api/league/draft/results?version=3.0&response_format=json&access_token=[token]&content_type=all
     [JsonObject(Title = "RootObject")]
     public class History
     {

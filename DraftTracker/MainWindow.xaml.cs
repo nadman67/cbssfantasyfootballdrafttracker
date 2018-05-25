@@ -38,15 +38,18 @@ namespace DraftTracker
         List<RankPlayer> _kRankings = new List<RankPlayer>();
         List<RankPlayer> _dstRankings = new List<RankPlayer>();
         Dictionary<string, string> _logoDictionary = new Dictionary<string, string>();
+        //use fiddler to capture traffic after login, tokens expire 
         //public static string token = "U2FsdGVkX19syk3KN8GEzlkjZxmD-2K6p2VdIh_0AkaIkKUBADyaJUJe4vUYu1J6S5MpR1bod3DONWUM83eEwnn1wfa_VQ2mbOosjSLCPhdx_BK_yq8qdeMSveroouHRYt-hDpA3UJuSMfAz8C8azA";
         public static string token = "U2FsdGVkX19tgLKaZ_uBd-80D32AU8s30FgwrYyTaerC2fOqYFm7QbGFKKYWEjwjaJKp0C0P4wvIuwnnyC1IjMA_Z3b5w5Ej2Fenk_Nwm2RUWzdKurZMUdpmv5TNyjoo1crDBw8Z8GUPXRMazH5LJA";
         public static string leagueName = "18927-h2h"; //debug
         //lists to iterate over for rankBrowser html display
-        List<string> rankingList = new List<string>(7) { "", "", "", "", "", "", "" };
+        List<string> _rankingList = new List<string>(7) { "", "", "", "", "", "", "" };
         int rankIncrementer = 0;//increments for display rollover
-        int timer = 0;
-        List<string> resultList = new List<string>(14) { "AwaitingStart", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+        int timer = 0;//timer int for clock 
+        List<string> _resultList = new List<string>(14) { "AwaitingStart", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+        int _numberOfrounds = 14;//set number of rounds of draft
         int resultIncrementer = 0;
+        //class variable to keep track of clock 
         string _teamPicking = "";
         DispatcherTimer dispatchTimer;
         DispatcherTimer rankingTimer;
@@ -73,18 +76,23 @@ namespace DraftTracker
             //initialize logo dictionary
             this.GetLogos(leagueName, token);
             //getdraftresults
+            //initialize to get first team picking
             _draftPicks = GetDraftPicks(leagueName, token);
             _teamPicking = _picks.Where(p => !_draftPicks.Any(p2 => Convert.ToInt64(p2.overall_pick) == p.number)).OrderBy(y => y.number).First().team.name;
+
+            //main ticker 
             dispatchTimer = new DispatcherTimer();
             dispatchTimer.Tick += new EventHandler(dipatcherTimer_Tick);
             dispatchTimer.Interval = new TimeSpan(0, 0, 1);
             dispatchTimer.Start();
 
+            //ticker that updates ranking browser display
             rankingTimer = new DispatcherTimer();
             rankingTimer.Tick += new EventHandler(rankingTimer_Tick);
             rankingTimer.Interval = new TimeSpan(0, 0, 5);
             rankingTimer.Start();
 
+            //ticker that updates result browser display
             resultTimer = new DispatcherTimer();
             resultTimer.Tick += new EventHandler(resultTimer_Tick);
             resultTimer.Interval = new TimeSpan(0, 0, 5);
@@ -96,17 +104,17 @@ namespace DraftTracker
 
         private void resultTimer_Tick(object sender, EventArgs e)
         {
-            if (resultList[resultIncrementer] == "")
+            if (_resultList[resultIncrementer] == "")//don't display if nothing
             {
                 resultIncrementer = 0;
             };
-            resultBrowser.NavigateToString(resultList[resultIncrementer % 14]);
+            resultBrowser.NavigateToString(_resultList[resultIncrementer % _numberOfrounds]);//
             resultIncrementer++;
         }
 
         private void rankingTimer_Tick(object sender, EventArgs e)
         {
-            rankBrowser.NavigateToString(rankingList[rankIncrementer % 7]);
+            rankBrowser.NavigateToString(_rankingList[rankIncrementer % 7]);//7 represents the number of position rank lists
             rankIncrementer++;
         }
 
@@ -114,7 +122,8 @@ namespace DraftTracker
         {
             _draftPicks = GetDraftPicks(leagueName, token);
             string teamPicking = _picks.Where(p => !_draftPicks.Any(p2 => Convert.ToInt64(p2.overall_pick) == p.number)).OrderBy(y => y.number).First().team.name;
-             if (_teamPicking == teamPicking)
+            //compare if a new team is picking, if so, increment timer, if not reset timer
+            if (_teamPicking == teamPicking)
             {
                 timer++;
             }
@@ -124,51 +133,45 @@ namespace DraftTracker
                 timer = 0;
             }
             
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            
             BuildResultHtml(_draftPicks);
-            var _roundOne = _draftPicks.Where(x => x.round == 10);
-            sw.Stop();
+
+            //get the draft picks of the team "ON THE CLOCK" and create html for display
             IEnumerable<HistoryPick> teamPicks = _draftPicks.Where(x => x.team.name == teamPicking).OrderBy(y=>y.player.position);
             string htmlTeamString = GetTeamHTML(_draftPicks, teamPicking, timer);
             
+            //remove drafted players from ranking lists and create html for display
             _overallRankings = _overallRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y=>y.rank).Take(20).ToList();
-            string overAllHtml = GetHtml(_overallRankings, "Overall");
-            rankingList[0] = overAllHtml;
+            string overAllHtml = GetRankHtml(_overallRankings, "Overall");
+            _rankingList[0] = overAllHtml;
 
             _qbRankings = _qbRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string qbHtml = GetHtml(_qbRankings, "QB");
-            rankingList[1] = qbHtml;
+            string qbHtml = GetRankHtml(_qbRankings, "QB");
+            _rankingList[1] = qbHtml;
 
 
             _rbRankings = _rbRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string rbHtml = GetHtml(_rbRankings, "RB");
-            rankingList[2] = rbHtml;
+            string rbHtml = GetRankHtml(_rbRankings, "RB");
+            _rankingList[2] = rbHtml;
 
             _wrRankings = _wrRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string wrHtml = GetHtml(_wrRankings, "WR");
-            rankingList[3] = wrHtml;
+            string wrHtml = GetRankHtml(_wrRankings, "WR");
+            _rankingList[3] = wrHtml;
 
             _teRankings = _teRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string teHtml = GetHtml(_teRankings, "TE");
-            rankingList[4] = teHtml;
+            string teHtml = GetRankHtml(_teRankings, "TE");
+            _rankingList[4] = teHtml;
 
             _kRankings = _kRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string kHtml = GetHtml(_kRankings, "K");
-            rankingList[5] = kHtml;
+            string kHtml = GetRankHtml(_kRankings, "K");
+            _rankingList[5] = kHtml;
 
             _dstRankings = _dstRankings.Where(x => !_draftPicks.Any(dp => dp.player.id == x.id)).OrderBy(y => y.rank).Take(20).ToList();
-            string dstHtml = GetHtml(_dstRankings, "DST");
-            rankingList[6] = dstHtml;
+            string dstHtml = GetRankHtml(_dstRankings, "DST");
+            _rankingList[6] = dstHtml;
 
-
-            string last10 = "Last 5 Picks: \r\n";
-            foreach (var pick in _draftPicks.Skip(Math.Max(0, _draftPicks.Count() - 10)))
-            {
-                last10 += pick.overall_pick + ") " + pick.team.name + ": " + pick.player.fullname + "  " + pick.player.position + " " + pick.player.pro_team + "   ";
-                 
-            }
-            last10 = GetLastTenHtml(_draftPicks);
+            //get the last ten draft picks and display on browser control
+            string last10 = GetLastTenHtml(_draftPicks);
             lastTenBrowser.NavigateToString(last10);
             TeamWebBrowser.NavigateToString(htmlTeamString);
         }
@@ -177,13 +180,16 @@ namespace DraftTracker
 
         private string GetTeamHTML(List<HistoryPick> draftPicks, string team, int timer)
         {
+            //difference css if pick has taken longer than two minutes, changes border to yellow
             string titleClass = "title";
             if (timer > 120)
             {
                 titleClass = "warningtitle";
             }
+            //for timer
             TimeSpan span = new TimeSpan(0, 0, timer);
             string timeSpan = span.ToString(@"mm\:ss");
+            //get team picks by position
             IEnumerable<HistoryPick> teamPicks = draftPicks.Where(x => x.team.name == team).OrderBy(y => y.player.position);
             string html = "<html>";
             html += "<div class='" + titleClass + "'>ON THE CLOCK:                  " + timeSpan + "</div>";
@@ -195,7 +201,6 @@ namespace DraftTracker
             html += "<tr class='label'><td>QB</td></tr>";
             html += GetPlayerHtml(teamPicks, "QB");
             html += "<tr class='label'><td>RB</td></tr>";
-
             html += GetPlayerHtml(teamPicks, "RB");
             html += "<tr class='label'><td>WR-TE</td></tr>";
             html += GetPlayerHtml(teamPicks, "WR-TE");
@@ -210,6 +215,7 @@ namespace DraftTracker
 
         private string GetPlayerHtml(IEnumerable<HistoryPick> teamPicks, string pos)
         {
+            //loop through picks and create table rows
             string html = "";
             foreach (var pick in teamPicks.Where(x => x.player.roster_position == pos))
             {
@@ -227,6 +233,7 @@ namespace DraftTracker
             GetStyle();
             returnHTML += "<table class='data borderTop' style='width: 100%; '><tbody>";
             returnHTML += "<tr class='subtitle'><td colspan='3'>Last Ten Selections</td></tr>";
+            //get last ten picks in reverse order, loop through them and create table rows
             foreach (var pic in _draftPicks.Skip(Math.Max(0, _draftPicks.Count() - 10)).Reverse())
             {
                 returnHTML += "<tr align='right' valign='top'><td align='left'>" + pic.overall_pick + "</td><td align='left'>" + pic.team.name + "</td><td align='left' class='playerLink'>" + pic.player.fullname + " <span class='playerPositionAndTeam'>" + pic.player.position + " | " + pic.player.pro_team + " </span></td></tr>";
@@ -236,13 +243,16 @@ namespace DraftTracker
         }
         private void BuildResultHtml(List<HistoryPick> draftPicks)
         {
+            //lists of picks by round
            List<List<HistoryPick>> byRound = new List<List<HistoryPick>>();
-            for (int i = 1; i < 15; i++)
+            for (int i = 1; i <= _numberOfrounds; i++)
             {
                 byRound.Add(_draftPicks.Where(x => x.round == i).ToList());
             }
+            //iterate through each round and create html for display
             foreach (var roundPicks in byRound)
             {
+                //if no picks, don't create html
                 if (roundPicks.Count > 0)
                 {
                     string html = this.GetStyle(); 
@@ -254,7 +264,7 @@ namespace DraftTracker
                         html += "<tr align='right' valign='top'><td align='left'>" + pic.round_pick + "</td><td align='left'>" + pic.team.name + "</td><td align='left' class='playerLink'>" + pic.player.fullname + " <span class='playerPositionAndTeam'>" + pic.player.position + " | " + pic.player.pro_team + " </span></td></tr>";
                     }
                     html += "</table>";
-                    resultList[roundPicks.First().round - 1] = html;
+                    _resultList[roundPicks.First().round - 1] = html;
                 }
                 
             }
@@ -262,6 +272,7 @@ namespace DraftTracker
             
         }
 
+        //css styles for display
         private string GetStyle()
         {
             return "<style>span.playerPositionAndTeam{font-family:proxima-nova,'Helvetica','Arial',sans-serif;font-weight:400;font-style:normal;font-size:11px;white-space:nowrap;display:inline-block}" + 
@@ -278,7 +289,7 @@ namespace DraftTracker
             
         }
 
-        private string GetHtml(List<RankPlayer> rankList, string pos)
+        private string GetRankHtml(List<RankPlayer> rankList, string pos)
         {
             string returnHTML = "<html>" +
                 GetStyle();
@@ -298,11 +309,12 @@ namespace DraftTracker
 
         private void GetLogos(string league, string token)
         {
+            //prefetch logo url
             string content = GetApiRequest("http://" + league + ".football.cbssports.com/api/league/teams?version=3.0&response_format=json&access_token=" + token + "&content_type=all");
             TeamObject teams = JsonConvert.DeserializeObject<TeamObject>(content);
             foreach (var t in teams.body.teams)
             {
-                _logoDictionary.Add(t.name, t.logo.Replace("36", "100"));
+                _logoDictionary.Add(t.name, t.logo);
             }
         }
         private void GetDraftOrder(string league, string token)
@@ -315,6 +327,7 @@ namespace DraftTracker
         {
             string content = GetApiRequest("http://" + league + ".football.cbssports.com/api/league/draft/results?version=3.0&response_format=json&access_token=" + token + "&content_type=all");
             History history = JsonConvert.DeserializeObject<History>(content);
+            //if we've got new picks, add them to class variable
             if (history.body.draft_results.picks != null && history.body.draft_results.picks.Count != _draftPicks.Count)
             {
                 var newPicks = history.body.draft_results.picks.Where(h => !_draftPicks.Any(dp => dp.overall_pick == h.overall_pick));
@@ -348,6 +361,7 @@ namespace DraftTracker
 
         }
 
+        //used to eliminate scroll bars on webbrowser
         private void TeamWebBrowser_LoadCompleted(object sender, NavigationEventArgs e)
         {
             string script = "document.body.style.overflow ='hidden'";

@@ -26,14 +26,10 @@ C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTr
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\DraftTracker.pdb
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\FSharp.Core.dll
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\Newtonsoft.Json.dll
-C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\WebDriver.dll
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\FSharp.Core.xml
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\Newtonsoft.Json.xml
-C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\bin\Debug\WebDriver.xml
-C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\DraftTracker.csprojResolveAssemblyReference.cache
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\MainWindow.g.cs
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\App.g.cs
-C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\DraftTracker_Content.g.cs
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\DraftTracker_MarkupCompile.cache
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\DraftTracker_MarkupCompile.lref
 C:\Users\brett\source\repos\DraftTracker\cbssfantasyfootballdrafttracker\DraftTracker\obj\Debug\MainWindow.baml

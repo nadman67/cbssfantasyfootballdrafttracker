@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Diagnostics;
+using System.Configuration;
 
 namespace DraftTracker
 {
@@ -39,8 +39,8 @@ namespace DraftTracker
         Dictionary<string, string> _logoDictionary = new Dictionary<string, string>();
         //use fiddler to capture traffic after login, tokens expire 
         //public static string token = "U2FsdGVkX19syk3KN8GEzlkjZxmD-2K6p2VdIh_0AkaIkKUBADyaJUJe4vUYu1J6S5MpR1bod3DONWUM83eEwnn1wfa_VQ2mbOosjSLCPhdx_BK_yq8qdeMSveroouHRYt-hDpA3UJuSMfAz8C8azA";
-        public static string token = "U2FsdGVkX19tgLKaZ_uBd-80D32AU8s30FgwrYyTaerC2fOqYFm7QbGFKKYWEjwjaJKp0C0P4wvIuwnnyC1IjMA_Z3b5w5Ej2Fenk_Nwm2RUWzdKurZMUdpmv5TNyjoo1crDBw8Z8GUPXRMazH5LJA";
-        public static string leagueName = "18927-h2h"; //debug
+        public static string token =  ConfigurationManager.AppSettings["token"];// "U2FsdGVkX19tgLKaZ_uBd-80D32AU8s30FgwrYyTaerC2fOqYFm7QbGFKKYWEjwjaJKp0C0P4wvIuwnnyC1IjMA_Z3b5w5Ej2Fenk_Nwm2RUWzdKurZMUdpmv5TNyjoo1crDBw8Z8GUPXRMazH5LJA";
+        public static string leagueName = ConfigurationManager.AppSettings["leaguename"];// "18927-h2h"; //debug
         //lists to iterate over for rankBrowser html display
         List<string> _rankingList = new List<string>(7) { "", "", "", "", "", "", "" };
         int rankIncrementer = 0;//increments for display rollover

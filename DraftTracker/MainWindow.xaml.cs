@@ -57,13 +57,7 @@ namespace DraftTracker
         {
             InitializeComponent();
             GetDraftOrder(leagueName, token);
-            //using (StreamReader r = new StreamReader(@"C:\Users\brett\OneDrive\Documents\draftorder.json"))
-            //{
-            //    string content = r.ReadToEnd();
-            //    Order order = JsonConvert.DeserializeObject<Order>(content);
-            //    _picks = order.body.draft_order.picks;
-            //}
-            //initialize rank lists
+
             _overallRankings = this.GetOverallRankings();
             _qbRankings = this.GetPositionRanking("QB");
             _rbRankings = this.GetPositionRanking("RB");

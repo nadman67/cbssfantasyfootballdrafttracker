@@ -1,0 +1,21 @@
+﻿<Window x:Class="DraftTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DraftTracker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1366"
+        WindowState="Maximized" WindowStyle="None">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="335*"/>
+            <ColumnDefinition Width="457*"/>
+        </Grid.ColumnDefinitions>
+        <WebBrowser Name="TeamWebBrowser" HorizontalAlignment="Left" Height="718" Margin="10,10,0,0" VerticalAlignment="Top" Width="428" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
+        <WebBrowser HorizontalAlignment="Left" Height="718" Margin="459,10,0,0" VerticalAlignment="Top" Width="350" Name="rankBrowser" Grid.ColumnSpan="2" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
+        <WebBrowser Grid.Column="1" HorizontalAlignment="Left" Height="381" Margin="257,10,0,0" VerticalAlignment="Top" Width="517" Name="resultBrowser" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
+        <WebBrowser Grid.Column="1" HorizontalAlignment="Left" Height="326" Margin="257,402,0,0" VerticalAlignment="Top" Width="517" Name="lastTenBrowser" LoadCompleted="TeamWebBrowser_LoadCompleted"/>
+        
+    </Grid>
+</Window>
